@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-GB" id="thimblr">
+<head>
+	<meta charset="utf-8" />
+	<title>Thimblr</title>
+	<meta name="Copyright" content="Copyright (c) 2010 Mark Wunsch and JP Hastings-Spital" />
+	<script type="text/javascript" src="assets/jquery.js"></script>
+	<script type="text/javascript" src="assets/main.js"></script>	
+	<style type="text/css">
+		html { overflow-x: hidden; overflow-y: hidden; background: #2C4762; }
+		body { margin:0; }
+		#thimblr { font-size: 13px; line-height: 1.4; font-family: Trebuchet, Arial,sans-serif; line-height: 30px; }
+		#thimblr h1 { font-family: 'Bookman Old Style', Georgia, serif; font-weight: bold; font-size: 18px; vertical-align: middle; padding: 0 0 0 15px; display:inline; color:#fff;}
+		#thimblr h1 a { text-decoration:none; color:#fff;}
+		#thimblr form { display:inline; height: 30px; padding: 0 15px; color: #fff; -moz-opacity:.30; filter:alpha(opacity=30); opacity:.30; }
+		#thimblr form:hover { -moz-opacity:1.00; filter:alpha(opacity=100); opacity:1.00; }
+		#thimblr form img { vertical-align:middle; border:0; -moz-opacity:.50; filter:alpha(opacity=50); opacity:.50;}
+		#thimblr form img:hover { -moz-opacity:1.00; filter:alpha(opacity=100); opacity:1.00;}
+		#thimblr select { width: 150px; }
+		#thimblr #docs { float: right; color: #fff; margin-right:15px; }
+		#theme-container {position:absolute; left:0px; right:0px; top:30px; bottom:0px;}
+		#theme-preview {width:100%; height:100%;}
+		form option.altered {font-style:italic;}
+		form option.altered:after {content:"*";}
+	</style>
+</head>
+<body>
+	<div id="thimblr">
+		<h1><a href="http://github.com/jphastings/thimblr" target="github">thimblr</a></h1>
+		<form method="get" action="theme.set" id="theme-select">
+			<label for="theme-selector">theme</label>
+			<select name="theme" id="theme-selector">
+				<option id="nothemes" disabled="disable">No Themes Available</option>
+			</select>
+			<% if settings.allowediting %><a href="/edit/theme" class="action"><img src="/images/edit.png" /></a><% end %>
+		</form>
+		<form method="get" action="data.set" id="data-select">
+			<label for="data-selector">data</label>
+			<select name="data" id="data-selector"></select>
+			<% if settings.allowediting %><a href="/edit/data" class="action"><img src="/images/edit.png" /></a><% end %>
+		</form>
+		<a id="docs" href="/help" target="tumblr">Help</a>
+	</div>
+	<div id="theme-container">
+		<iframe id="theme-preview" src="/help" border="0" frameborder="0" name="tumblr"></iframe>
+	</div>
+</body>	
+</html>
