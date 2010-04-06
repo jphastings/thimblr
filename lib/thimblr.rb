@@ -6,19 +6,30 @@ require 'launchy'
 require 'thimblr/parser'
 
 class Thimblr::Application < Sinatra::Application
-  set :root, File.join(File.dirname(__FILE__),"..")
-  Dir.chdir root
-  set :config, File.join(File.dirname(__FILE__),'..','config')
-  s = YAML::load(open(File.join(config,'settings.yaml')))
-  set :editor, s['Editor'] if s['Editor']
-  set :themes, File.expand_path((File.directory? s['ThemesLocation']) ? s['ThemesLocation'] : "./themes")
-  set :data, File.expand_path((File.directory? s['DataLocation']) ? s['DataLocation'] : "")
-  set :allowediting, (s['AllowEditing'] == true) ? true : false
-  set :tumblr, Thimblr::Parser::Defaults.merge(s['Tumblr'])
-  set :port, (s['Port'].to_i > 0) ? s['Port'].to_i  : 4567
+  def self.parse_config(s)
+    set :themes, File.expand_path((File.directory? s['ThemesLocation']) ? s['ThemesLocation'] : "./themes")
+    set :data, File.expand_path((File.directory? s['DataLocation'] || "") ? s['DataLocation'] : "")
+    set :allowediting, (s['AllowEditing'] == true) ? true : false
+    set :editor, s['Editor'] if s['Editor']
+    set :tumblr, Thimblr::Parser::Defaults.merge(s['Tumblr'])
+    set :port, (s['Port'].to_i > 0) ? s['Port'].to_i  : 4567
+  end
   
-  enable :sessions
-  set :bind, '127.0.0.1'
+  configure do |s|
+    set :root, File.join(File.dirname(__FILE__),"..")
+    Dir.chdir root
+    set :config, File.join(root,'config')
+    
+    s.parse_config(YAML::load(open(File.join(config,'settings.yaml'))))
+    enable :sessions
+    set :bind, '127.0.0.1'
+  end
+
+  helpers do
+    def get_relative(path)
+      Pathname.new(path).relative_path_from(Pathname.new(settings.root)).to_s
+    end
+  end
 
   get '/' do
     erb :index
@@ -80,10 +91,26 @@ class Thimblr::Application < Sinatra::Application
       halt 404, "Odd, I can't find that file"
     end
   end
+  
+  get '/settings.set' do
+    #settings.parse_config
+    open(File.join(settings.config,"settings.yaml"),"w") do |f|
+      f.write YAML.dump({
+        "Tumblr"          => settings.tumblr,
+        "ThemesLocation"  => get_relative(settings.theme),
+        "DataLocation"    => get_relative(settings.data),
+        "AllowEditing"    => settings.allowediting,
+        "Editor"          => settings.editor,
+        "Port"            => settings.port
+      })
+    end
+    
+    "Settings saved"
+  end
 
   # Downloads feed data from a tumblr site
   get '/download/data' do
-
+    
   end
 
   before do
@@ -127,5 +154,7 @@ class Thimblr::Application < Sinatra::Application
   end
   
   # TODO: Only if Sinatra runs successfully
-  Launchy.open("http://localhost:#{port}")
+  #Launchy.open("http://localhost:#{port}")
 end
+
+Thimblr::Application.run!

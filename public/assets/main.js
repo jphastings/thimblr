@@ -67,6 +67,7 @@ function checkThemes() {
 function checkData() {
 	$.getJSON('/data.json',function(data) {
 		$('#data-selector option.keep').removeClass('keep')
+		var n = 0
 		$.each(data,function(datum,hash) {
 			obj = $("#data-selector option[value='"+datum+"']")
 			if (obj.length > 0) {
@@ -81,7 +82,10 @@ function checkData() {
 				opt.data('hash',hash)
 				$('#data-selector').append(opt)
 			}
+			n = n + 1;
 		})
+		if (n > 1)
+			$('#data-select').css('visibility','visible')
 		// Remove options without the 'save' data
 		$('#data-selector :not(option.keep)').remove()
 	})

@@ -15,6 +15,7 @@ Hope you guys don't mind… -->
     	    </head><body onload="                            " onclick="click_body();" id="dashboard_goodies">
         <div id="container">
             <img id="content_top" alt="" src="/images/content_top.png"><div id="content">
+			<form action="/settings.set">
 			<div id="left_column">
 			    <div class="goody_container">
 			        <h1>Welcome to Thimblr!</h2>
@@ -23,16 +24,39 @@ Hope you guys don't mind… -->
 					<p>You can find the latest version of thimblr <a href="http://github.com/jphastings/Thimblr/" taget="github">on github</a></p>
 			    </div>
 				<div class="goody_container">
+					<a name="Instructions"></a>
 			        <h2>Instructions</h2>
 			        <p><strong>Don't Panic!</strong> Thimblr is very easy to use. Just choose a theme from the drop down box at the top of the page and you're away. <%=(settings.allowediting) ? "Y" : "If you <a href=\"#AllowEditing\">enable editing</a>, y" %>ou can use the notepad icon to it's right to edit the current template in your text editor.</p>
-					<p>If you're feeling adventurous you can <%=(settings.data.nil?) ? "specify a <a href=\"#DataLocation\">data directory</a> and " : "" %> create a new data file with your own tumblr test data in it. If there is more than one data file to choose from, you will be able to choose it next to the theme drop-down.</p>
-			        
+					<p>If you're feeling adventurous you can <%=(settings.data.nil?) ? "specify a <a href=\"#DataLocation\">data directory</a> and " : "" %> create a new data file with your own tumblr test data in it, or <a href="#ImportData">import post data</a> from Tumblr. If there is more than one data file to choose from, you will be able to choose it next to the theme drop-down.</p>
 			    </div>
 			    <div class="goody_container">
+					<a name="Settings"></a>
 			        <h2>Thimblr Settings</h2>
-			        <p>You can change Thimblr's inner workings here, though this is a front-end to the <code>settings.yaml</code> file, which you can edit yourself if you feel confident.</p>
-			        
+			        <p>You can change Thimblr's inner workings here.</p>
+					
+					<a name="AllowEditing"></a>
+			        <label for="AllowEditing">Allow Editing</label>
+					<input type="checkbox" name="AllowEditing" />
+					
+					<div id="opt-editor">
+						<a name="Editor"></a>
+						<label for="Editor">Text Editor</label>
+						<input type="text" name="Editor" value="<%=settings.editor%>"></input>
+					</div>
+					
+					<a name="ThemesLocation"></a>
+					<label for="ThemesLocation">Location of Themes</label>
+					<input type="text" name="ThemesLocation" value="<%=get_relative(settings.themes)%>" />
+					
+					<a name="DataLocation"></a>
+					<label for="DataLocation">Location of Data</label>
+					<input type="text" name="DataLocation" value="<%=get_relative(settings.data)%>" />
 			    </div>
+				<div class="goody_container">
+					<a name="ImportData"></a>
+			        <h2>Import Data</h2>
+					<p>You can grab post data directly from Tumblr using this tool. All it does is parses the <a href="http://tumblr.com/docs/api" target="tumblr">tumblr API</a> into the format needed by Thimblr.</p>
+				</div>
 			</div>
 			<div style="background-color: rgb(192, 205, 129);" id="right_column">
     			<div style="background-color: rgb(201, 213, 141); border-width: 0px; -moz-border-radius-topright: 10px;" class="goody_container">
@@ -43,11 +67,13 @@ Hope you guys don't mind… -->
         			</div>
             	</div>
 			    <div class="goody_container">
-			        <h2>Publish to Twitter</h2>
-			        Automatically (or selectively) update Twitter with a summary and link to your Tumblr posts.
+			        <h2>Hackity Hack</h2>
+					<p>All Thimblr's settings can be edited on this page, or in the <code>settings.yaml</code> file in the gem source.</p>
+			        <p>Thimblr runs on Ruby, so it should be fairly obvious how it works if you look at the source code. Feel free to <a>fork the project on github</a> and play around. If you make any modifications you're proud off, send me a message! I'll fold useful things into my repo.</p>
 			    </div>    
     		</div>
         </div>
+		</form>
 		<img id="content_bottom" alt="" src="/images/content_bottom.png">
 		<ul id="footer">
 			<li><strong>Thimblr <a href="http://code.byJP.me" target="_new">by JP</a></strong></li>
