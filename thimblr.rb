@@ -26,13 +26,10 @@ get '/help' do
   erb :help
 end
 
-get %r{/set/theme/([\w-]+)} do |theme|
-  file = "#{settings.themes}/#{theme}.html"
-  if File.exists?(file)
-    puts "Setting Theme as #{theme}"
-    response.set_cookie('theme',theme)
+get '/theme.set' do
+  if File.exists?("#{settings.themes}/#{params['theme']}.html")
+    response.set_cookie('theme',params['theme'])
   else
-    puts "Didn't on #{file}"
     halt 404, "Not found"
   end
 end
@@ -45,10 +42,9 @@ get '/themes.json' do
   themes.to_json
 end
 
-get %r{/set/data/([\w-]+)} do |data|
-  file = "#{settings.data}/#{data}.yml"
-  if File.exists?(file)
-    response.set_cookie('data',data)
+get '/data.set' do
+  if File.exists?("#{settings.data}/#{params['data']}.yml")
+    response.set_cookie('data',params['data'])
   else
     halt 404, "Not found"
   end
@@ -70,12 +66,13 @@ get %r{^/edit/(theme|data)$} do |file|
   when 'theme'
     filename = "#{settings.themes}/#{request.cookies['theme']}.html"
   when 'data'
-    filename = "#{settings.data}/#{request.cookies['data'] }.yml"
+    p filename = "#{settings.data}/#{request.cookies['data'] }.yml"
   else
     halt 400, "Not a valid edit selection"
   end
   if File.exists? filename
     # TODO: Send useful http status response
+    p "Open #{filename}"
     `#{settings.editor} "#{filename}"`
   else
     halt 404, "Odd, I can't find that file"
@@ -83,8 +80,8 @@ get %r{^/edit/(theme|data)$} do |file|
 end
 
 # Downloads feed data from a tumblr site
-get %r{/download/data/([a-zA-Z-]+)} do
-  
+get '/download/data' do
+
 end
 
 before do

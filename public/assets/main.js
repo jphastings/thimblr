@@ -10,9 +10,7 @@ $(document).ready(function(){
 	$('#theme-selector').bind('mouseenter',function(){checkThemes();});
 
 	$('#theme-select').bind('submit',function(e){
-		$.get('/set/theme/'+$('#theme-selector').children(':selected').val(),{},function(data,status) {
-			console.log(data)
-			console.log(status)
+		$.get('/theme.set',{'theme':$('#theme-selector').children(':selected').val()},function() {
 			$('#theme-preview').attr('src','/thimblr');
 			$('#theme-selector').children(':selected').removeClass('altered')
 		})
@@ -28,7 +26,7 @@ $(document).ready(function(){
 	$('#data-selector').bind('mouseenter',function(){checkThemes();});
 
 	$('#data-select').bind('submit',function(e){
-		$.get('/set/data/'+$('#data-selector').children(':selected').val(),{},function() {
+		$.get('/data.set',{'data':$('#data-selector').children(':selected').val()},function() {
 			$('#data-preview').attr('src','/thimblr');
 			$('#data-selector').children(':selected').removeClass('altered')
 		})

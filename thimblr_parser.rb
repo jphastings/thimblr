@@ -23,9 +23,6 @@ module Thimblr
     }
     
     def initialize(data_file,theme_file = nil)
-      puts "--- theme & data ---"
-      p data_file
-      p theme_file
       template = YAML::load(open(data_file))
       @settings = Defaults.merge YAML::load(open("settings.yaml"))['Tumblr']
       @apid = 0
