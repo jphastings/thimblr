@@ -154,7 +154,5 @@ class Thimblr::Application < Sinatra::Application
   end
   
   # TODO: Only if Sinatra runs successfully
-  #Launchy.open("http://localhost:#{port}")
+  Launchy.open("http://localhost:#{port}")
 end
-
-Thimblr::Application.run!
