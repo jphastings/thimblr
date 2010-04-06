@@ -1,6 +1,5 @@
 $(document).ready(function(){
 	$('#thimblr a.action').bind('click',function(e) {
-		console.log("CLICK!")
 		e.preventDefault();
 		$.get(this.href,function(data,status) {
 			// Do some informing
@@ -23,7 +22,7 @@ $(document).ready(function(){
 	});
 	
 	checkData();
-	$('#data-selector').bind('mouseenter',function(){checkThemes();});
+	$('#data-selector').bind('mouseenter',function(){checkData();});
 
 	$('#data-select').bind('submit',function(e){
 		$.get('/data.set',{'data':$('#data-selector').children(':selected').val()},function() {

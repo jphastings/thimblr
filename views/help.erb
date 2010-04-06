@@ -1,28 +1,58 @@
-<!DOCTYPE html>
-<html dir="ltr" lang="en-GB" id="thimblr">
-<head>
-	<title>Thimblr Help</title>
-	<meta name="Copyright" content="Copyright (c) 2010 JP Hastings-Spital" />
-	<script type="text/javascript" src="/assets/jquery.js"></script>
-	<script type="text/javascript" src="/assets/help.js"></script>
-	<style type="text/css">
-		body { margin:15px; background: #2C4762;  font-size: 13px; line-height: 1.3; font-family: Georgia,serif; color: #fff; line-height: 30px; }
-		h1 { font-family: 'Bookman Old Style', Georgia, serif; font-weight: bold; font-size: 24px; color:#fff;}
-		h2 { font-family: 'Bookman Old Style', Georgia, serif; font-weight: bold; font-size: 20px; color:#fff;}
-		h3 { font-family: 'Bookman Old Style', Georgia, serif; font-style:italic; font-size: 16px; color:#fff;}
-		#content { width:600px; margin:40px auto; }
-	</style>
-</head>
-<body>
-	<div id="content">
-		<h1>Welcome to Thimblr!</h1>
-		<p><%=request.cookies %></p>
-		<h2>Settings</h2>
-		<h3>Tumblr Set Up</h3>
-		<p>Some templates are different depending on your tumblr settings. The following options will affect all the templates and data sets you use. They only affect Thimblr's emulation of Tumblr, not your real Tumblr account!</p>
-		<form action="/set/settings">
-		
-		</form>
+<html lang="en-GB" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head>
+<!-- This layout is shamelessly ripped from:
+        .                                 .o8       oooo               
+      .o8                                "888       `888               
+    .o888oo oooo  oooo  ooo. .oo.  .oo.   888oooo.   888  oooo d8b     
+      888   `888  `888  `888P"Y88bP"Y88b  d88' `88b  888  `888""8P     
+      888    888   888   888   888   888  888   888  888   888        
+      888 .  888   888   888   888   888  888   888  888   888    .o. 
+      "888"  `V88V"V8P' o888o o888o o888o `Y8bod8P' o888o d888b   Y8P
+Hope you guys don't mind… -->
+
+    	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    	<link href="/stylesheets/tumblr.css" type="text/css" rel="stylesheet">
+    	<title>Thimblr Help</title>
+    	    </head><body onload="                            " onclick="click_body();" id="dashboard_goodies">
+        <div id="container">
+            <img id="content_top" alt="" src="/images/content_top.png"><div id="content">
+			<div id="left_column">
+			    <div class="goody_container">
+			        <h1>Welcome to Thimblr!</h2>
+        
+					<p>Hello! Thimblr is a program that will help you design templates for <a href="http://tumblr.com">tumblr</a>. Drawing strong influence from Mark Wunch's <a href="http://github.com/mwunsch/thimble/">Thimble</a>, Thimblr is a complete rewrite in Ruby providing an in-built server and some extra helpers that will hopefully make editing your themes as easy as planning for internet explorer can be.</p>
+					<p>You can find the latest version of thimblr <a href="http://github.com/jphastings/Thimblr/" taget="github">on github</a></p>
+			    </div>
+				<div class="goody_container">
+			        <h2>Instructions</h2>
+			        <p><strong>Don't Panic!</strong> Thimblr is very easy to use. Just choose a theme from the drop down box at the top of the page and you're away. <%=(settings.allowediting) ? "Y" : "If you <a href=\"#AllowEditing\">enable editing</a>, y" %>ou can use the notepad icon to it's right to edit the current template in your text editor.</p>
+					<p>If you're feeling adventurous you can <%=(settings.data.nil?) ? "specify a <a href=\"#DataLocation\">data directory</a> and " : "" %> create a new data file with your own tumblr test data in it. If there is more than one data file to choose from, you will be able to choose it next to the theme drop-down.</p>
+			        
+			    </div>
+			    <div class="goody_container">
+			        <h2>Thimblr Settings</h2>
+			        <p>You can change Thimblr's inner workings here, though this is a front-end to the <code>settings.yaml</code> file, which you can edit yourself if you feel confident.</p>
+			        
+			    </div>
+			</div>
+			<div style="background-color: rgb(192, 205, 129);" id="right_column">
+    			<div style="background-color: rgb(201, 213, 141); border-width: 0px; -moz-border-radius-topright: 10px;" class="goody_container">
+        			<h2>Tumblr Settings</h2>
+					<p>Some templates are different depending on your tumblr settings. The following options will affect all the templates and data sets you use. They only affect Thimblr's emulation of Tumblr, not your real Tumblr account!</p>
+        			<div style="margin-bottom: 5px;" class="goody_data">
+            			<input type="text" readonly="readonly" onclick="this.select();" value="qalsog816@tumblr.com">
+        			</div>
+            	</div>
+			    <div class="goody_container">
+			        <h2>Publish to Twitter</h2>
+			        Automatically (or selectively) update Twitter with a summary and link to your Tumblr posts.
+			    </div>    
+    		</div>
+        </div>
+		<img id="content_bottom" alt="" src="/images/content_bottom.png">
+		<ul id="footer">
+			<li><strong>Thimblr <a href="http://code.byJP.me" target="_new">by JP</a></strong></li>
+			<li><strong>layout &copy; <a href="http://tumblr.com" target="_new">Tumblr, Inc.</strong></li>
+		</div>        
 	</div>
 </body>
 </html>
