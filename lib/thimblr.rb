@@ -7,7 +7,7 @@ require 'launchy'
 require 'thimblr/parser'
 require 'rbconfig'
 
-class Thimblr::Application < Sinatra::Application
+class Thimblr::Application < Sinatra::Base
   Editors = {
     'textmate' => {'command' => "mate",'platform' => "mac",'name' => "TextMate"},
     'bbedit'   => {'command' => "bbedit",'platform' => 'mac','name' => "BBEdit"},
