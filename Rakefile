@@ -15,7 +15,7 @@ begin
     gem.email = "jphastings@gmail.com"
     gem.homepage = "http://github.com/jphastings/Thimblr"
     gem.author = "JP Hastings-Spital"
-    gem.add_dependency "sinatra"
+    gem.add_dependency "sinatra" >= 1.0
     gem.add_dependency "launchy"
     gem.files = FileList['lib/**/*','data/**/*','themes/**/*','config/**/*','views/**/*']
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
