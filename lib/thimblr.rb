@@ -131,7 +131,7 @@ class Thimblr::Application < Sinatra::Application
     "Settings saved"
   end
 
-  # Downloads feed data from a tumblr site
+  # TODO: Downloads feed data from a tumblr site
   get '/import' do
     halt 501, "Sorry, I haven't written this bit yet!"
   end
@@ -157,11 +157,13 @@ class Thimblr::Application < Sinatra::Application
   get %r{^/thimblr/post/(\d+)/?.*$} do |postid|
     @parser.render_permalink(postid)
   end
-
+  
+  # TODO: Search page
   get %r{^/thimblr/search/(.+)$} do |query|
     @parser.render_search(query)
   end
 
+  # TODO: tagged pages
   get %r{^/thimblr/tagged/(.+)$} do |tags|
     halt 501, "Not Implemented"
   end
@@ -171,7 +173,7 @@ class Thimblr::Application < Sinatra::Application
     halt 501, "Not Implemented"
   end
 
-  # This is for pages
+  # TODO: Pages
   get '/thimblr/*' do
     @parser.render_page(params[:splat])
   end
