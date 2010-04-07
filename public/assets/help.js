@@ -12,6 +12,10 @@ $(document).ready(function(){
 		}
 	})
 	
+	$('form').bind('submit',function(e) {
+		e.preventDefault();
+	})
+	
 	$('table.settings a.preset').bind('click',function(e) {
 		e.preventDefault();
 		$('#'+$(this).parent().attr('rel')).val(this.rel).effect("highlight", {}, 500);

@@ -1,3 +1,4 @@
+var currtheme;
 $(document).ready(function(){
 	$('#thimblr a.action').bind('click',function(e) {
 		e.preventDefault();
@@ -16,23 +17,24 @@ $(document).ready(function(){
 		return false;
 	});
 
-	$('#theme-selector').bind('mouseup',function(e){
-		if (e.target.nodeName.toLowerCase() === 'option')
-	  		$('#theme-select').trigger('submit');
+	$('#theme-selector').bind('change',function(e){
+	  	$('#theme-select').trigger('submit');
 	});
 	
 	checkData();
 	$('#data-selector').bind('mouseenter',function(){checkData();});
 
 	$('#data-select').bind('submit',function(e){
-		$.get('/data.set',{'data':$('#data-selector').children(':selected').val()},function() {
+		currtheme = $('#data-selector').children(':selected').val();
+		$.get('/data.set',{'data':currtheme},function() {
 			$('#data-preview').attr('src','/thimblr');
 			$('#data-selector').children(':selected').removeClass('altered')
 		})
 		return false;
 	});
 
-	$('#data-selector').bind('mouseup',function(e){
+	$('#data-selector').bind('click',function(e){
+		alert('argh')
 		if (e.target.nodeName.toLowerCase() === 'option')
 	  		$('#data-select').trigger('submit');
 	});
@@ -48,7 +50,12 @@ function checkThemes() {
 			if (obj.length > 0) {
 				if (obj.data('hash') != hash) { // Exists and is new, add a star
 					obj.data('hash',hash).addClass('keep')
-					obj.addClass('altered')
+					if (theme == currtheme) {
+						$('#data-preview').attr('src','/thimblr');
+					} else {
+						obj.addClass('altered')
+					}
+					
 				} else { // Exists
 					obj.addClass('keep')
 				}

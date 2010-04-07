@@ -61,6 +61,7 @@ class Thimblr::Application < Sinatra::Application
   end
 
   get '/theme.set' do
+    p params
     if File.exists?(File.join(settings.themes,"#{params['theme']}.html"))
       response.set_cookie('theme',params['theme'])
     else
@@ -107,8 +108,10 @@ class Thimblr::Application < Sinatra::Application
     end
     if File.exists? filename
       # TODO: Send useful http status response
+      puts "Launching #{settings.editor} to edit file #{filename}"
       `#{settings.editor} "#{filename}"`
     else
+      puts "Failed to launch #{settings.editor} to edit file #{filename}"
       halt 404, "Odd, I can't find that file"
     end
   end
