@@ -2,16 +2,37 @@ require 'rubygems'
 require 'sinatra'
 require 'json'
 require 'digest/md5'
+require 'pathname'
 require 'launchy'
 require 'thimblr/parser'
+require 'rbconfig'
 
 class Thimblr::Application < Sinatra::Application
+  Editors = {
+    'textmate' => {'command' => "mate",'platform' => "mac",'name' => "TextMate"},
+    'bbedit'   => {'command' => "bbedit",'platform' => 'mac','name' => "BBEdit"},
+    'textedit' => {'command' => "open -a TextEdit.app",'platform' => 'mac','name' => "TextEdit"}
+  }
+  Locations = [
+    {"dir" => "~/Library/Application Support/Thimblr/", 'name' => "Application Support", 'platform' => "mac"},
+    {'dir' => "~/.thimblr/",'name' => "Home directory", 'platform' => "nix"}
+  ]
+  
+  case RbConfig::CONFIG['target_os']
+  when /darwin/i
+    Platform = "mac"
+  when /mswin32/i
+    Platform = "win"
+  else
+    Platform = "nix"
+  end
+  
   def self.parse_config(s)
     set :themes, File.expand_path((File.directory? s['ThemesLocation']) ? s['ThemesLocation'] : "./themes")
     set :data, File.expand_path((File.directory? s['DataLocation'] || "") ? s['DataLocation'] : "")
-    set :allowediting, (s['AllowEditing'] == true) ? true : false
+    set :allowediting, (s['AllowEditing']) ? true : false
     set :editor, s['Editor'] if s['Editor']
-    set :tumblr, Thimblr::Parser::Defaults.merge(s['Tumblr'])
+    set :tumblr, Thimblr::Parser::Defaults.merge(s['Tumblr'] || {})
     set :port, (s['Port'].to_i > 0) ? s['Port'].to_i  : 4567
   end
   
@@ -27,7 +48,7 @@ class Thimblr::Application < Sinatra::Application
 
   helpers do
     def get_relative(path)
-      Pathname.new(path).relative_path_from(Pathname.new(settings.root)).to_s
+      Pathname.new(path).relative_path_from(Pathname.new(File.expand_path(settings.root))).to_s
     end
   end
 
@@ -92,12 +113,14 @@ class Thimblr::Application < Sinatra::Application
     end
   end
   
-  get '/settings.set' do
-    #settings.parse_config
+  get %r{/(tumblr)?settings.set} do |tumblr|
+    halt 501 if tumblr == "tumblr" # TODO: Tumblr settings save
+    
+    settings.parse_config(params)
     open(File.join(settings.config,"settings.yaml"),"w") do |f|
       f.write YAML.dump({
         "Tumblr"          => settings.tumblr,
-        "ThemesLocation"  => get_relative(settings.theme),
+        "ThemesLocation"  => get_relative(settings.themes),
         "DataLocation"    => get_relative(settings.data),
         "AllowEditing"    => settings.allowediting,
         "Editor"          => settings.editor,
@@ -109,8 +132,8 @@ class Thimblr::Application < Sinatra::Application
   end
 
   # Downloads feed data from a tumblr site
-  get '/download/data' do
-    
+  get '/import' do
+    halt 501, "Sorry, I haven't written this bit yet!"
   end
 
   before do

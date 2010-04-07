@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'thimblr'
-Thimblr::Application.run!(*ARGV)
+begin
+  Thimblr::Application.run!(*ARGV)
+rescue RuntimeError # TODO: Only for port occupied
+  $stderr.puts "The server failed to initialize, are you trying to run two instances at once?"
+end

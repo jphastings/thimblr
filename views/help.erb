@@ -11,17 +11,25 @@ Hope you guys don't mind… -->
 
     	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     	<link href="/stylesheets/tumblr.css" type="text/css" rel="stylesheet">
+		<link href="/stylesheets/help.css" type="text/css" rel="stylesheet">
+
     	<title>Thimblr Help</title>
-    	    </head><body onload="                            " onclick="click_body();" id="dashboard_goodies">
+		<script src="assets/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="assets/help.js" type="text/javascript" charset="utf-8"></script>
+		<script src="assets/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="assets/iphone-style-checkboxes.js" type="text/javascript" charset="utf-8"></script>
+		<style>table.settings .explain div.presets a.<%=Thimblr::Application::Platform%> {display:inline;}</style>
+	</head>
+	<body id="dashboard_goodies">
         <div id="container">
             <img id="content_top" alt="" src="/images/content_top.png"><div id="content">
-			<form action="/settings.set">
 			<div id="left_column">
 			    <div class="goody_container">
 			        <h1>Welcome to Thimblr!</h2>
         
-					<p>Hello! Thimblr is a program that will help you design templates for <a href="http://tumblr.com">tumblr</a>. Drawing strong influence from Mark Wunch's <a href="http://github.com/mwunsch/thimble/">Thimble</a>, Thimblr is a complete rewrite in Ruby providing an in-built server and some extra helpers that will hopefully make editing your themes as easy as planning for internet explorer can be.</p>
-					<p>You can find the latest version of thimblr <a href="http://github.com/jphastings/Thimblr/" taget="github">on github</a></p>
+					<p>Hello! Thimblr is a program that will help you design templates for <a href="http://tumblr.com">tumblr</a>. Drawing strong influence from Mark Wunch's <a href="http://github.com/mwunsch/thimble/">Thimble</a>, Thimblr is a complete rewrite in Ruby providing an in-built server and some extra helpers that will hopefully make editing your themes as easy as planning for internet explorer can be&hellip;</p>
+					<p>If this page looks weird to you, you're probably using Internet Explorer. I'm sorry, this project is a bit of fun for me and I'm just not up for the hours of work required for IE compatibility. Feel free to install another browser or submit a patch!</p>
+					<p>You can find the latest version of thimblr <a href="http://github.com/jphastings/Thimblr/" taget="github">on github</a> but you can upgrade your copy with <code>gem update Thimblr</code>, as with any other gem.</p>
 			    </div>
 				<div class="goody_container">
 					<a name="Instructions"></a>
@@ -32,44 +40,117 @@ Hope you guys don't mind… -->
 			    <div class="goody_container">
 					<a name="Settings"></a>
 			        <h2>Thimblr Settings</h2>
-			        <p>You can change Thimblr's inner workings here.</p>
-					
-					<a name="AllowEditing"></a>
-			        <label for="AllowEditing">Allow Editing</label>
-					<input type="checkbox" name="AllowEditing" />
-					
-					<div id="opt-editor">
+			        <p>Have a play around with the internals of Thimblr! If you roll over the arrows to the right of each option you'll see some presets for that setting.</p>
+					<form action="/settings.set" id="settings">
+					<table class="settings">
+						<tr>
+							<th width="120px"></th>
+							<th width="350px"></th>
+							<th></th>
+						</tr>
+						
+						<a name="AllowEditing"></a>
+						<tr id="opt-AllowEditing">
+							<td><label for="AllowEditing">Allow Editing</label></td>
+							<td colspan="2"><span style="float:right;width:400px" class="explain">Only needs to be off if you're paranoid</span><input id="AllowEditing" type="checkbox" name="AllowEditing" <%=settings.allowediting ? "checked=\"checked\"" : "" %>/></td>
+						</tr>
+						
 						<a name="Editor"></a>
-						<label for="Editor">Text Editor</label>
-						<input type="text" name="Editor" value="<%=settings.editor%>"></input>
-					</div>
-					
-					<a name="ThemesLocation"></a>
-					<label for="ThemesLocation">Location of Themes</label>
-					<input type="text" name="ThemesLocation" value="<%=get_relative(settings.themes)%>" />
-					
-					<a name="DataLocation"></a>
-					<label for="DataLocation">Location of Data</label>
-					<input type="text" name="DataLocation" value="<%=get_relative(settings.data)%>" />
-			    </div>
-				<div class="goody_container">
-					<a name="ImportData"></a>
-			        <h2>Import Data</h2>
-					<p>You can grab post data directly from Tumblr using this tool. All it does is parses the <a href="http://tumblr.com/docs/api" target="tumblr">tumblr API</a> into the format needed by Thimblr.</p>
+						<tr id="opt-Editor" <%=settings.allowediting ? "" : "style=\"display:none\""%>>
+							<td><label for="Editor">Text Editor</label></td>
+							<td><input id="Editor" type="text" name="Editor" value="<%=settings.editor%>"></input></td>
+							<td class="explain">
+								<div class="contain">
+									<img src="/images/preset.png" class="presetIcon"/>
+									<div class="presetbox">
+										<div class="presets" rel="Editor">
+											<% Thimblr::Application::Editors.each do |ref,editor| %>
+											<a href="#" rel="<%=editor['command']%>" title="<%=editor['name']%>" class="preset <%=editor['platform']%>"><img src="/images/editors/<%=ref%>.png" /></a>
+											<% end %>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+						
+						<a name="ThemesLocation"></a>
+						<tr id="opt-ThemesLocation">
+							<td><label for="ThemesLocation">Location of Themes</label></td>
+							<td><input id="ThemesLocation" type="text" name="ThemesLocation" value="<%=get_relative(settings.themes)%>/" /></td>
+							<td class="explain">
+								<div class="contain">
+									<img src="/images/preset.png" class="presetIcon"/>
+									<div class="presetbox">
+										<div class="presets" rel="ThemesLocation">
+										<% Thimblr::Application::Locations.each do |loc| %>
+										<a href="#" rel="<%=loc['dir']%>themes/" title="<%=loc['name']%>" class="preset <%=loc['platform']%>"><img src="/images/os/<%=loc['platform']%>.png"/></a>
+										<% end %>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+						
+						<a name="DataLocation"></a>
+						<tr id="opt-DataLocation">
+							<td><label for="DataLocation">Location of Data</label></td>
+							<td><input id="DataLocation" type="text" name="DataLocation" value="<%=get_relative(settings.data)%>/" /></td>
+							<td class="explain">
+								<div class="contain">
+									<img src="/images/preset.png" class="presetIcon"/>
+									<div class="presetbox">
+										<div class="presets" rel="DataLocation">
+										<% Thimblr::Application::Locations.each do |loc| %>
+										<a href="#" rel="<%=loc['dir']%>data/" title="<%=loc['name']%>" class="preset <%=loc['platform']%>"><img src="/images/os/<%=loc['platform']%>.png"/></a>
+										<% end %>
+										</div>
+									</div>
+								</div>
+							</td>
+			    		</tr>
+			
+						<a name="Port"></a>
+						<tr id="opt-Port">
+							<td><label for="Port">Thimblr Port</label></td>
+							<td><input id="Port" type="text" name="Port" value="<%=settings.port%>" /></td>
+							<td class="explain" rel="Port">
+								<a href="#" rel="4567" class="preset"><img src="/images/preset.png"/></a>
+							</td>
+			    		</tr>
+					</table>
+					</form>
+					<p><em>Changes are saved automatically</em></p>
 				</div>
 			</div>
 			<div style="background-color: rgb(192, 205, 129);" id="right_column">
     			<div style="background-color: rgb(201, 213, 141); border-width: 0px; -moz-border-radius-topright: 10px;" class="goody_container">
         			<h2>Tumblr Settings</h2>
+					<p>At some point I'll allow you to edit the (few) options that the tumblr emulator requires in this box. At the moment that includes the Posts per Page, which is set to 10.</p>
+					<p>Go and have a poke around the <code>settings.yaml</code> if you really want to change this value</p>
+					<!--
 					<p>Some templates are different depending on your tumblr settings. The following options will affect all the templates and data sets you use. They only affect Thimblr's emulation of Tumblr, not your real Tumblr account!</p>
-        			<div style="margin-bottom: 5px;" class="goody_data">
-            			<input type="text" readonly="readonly" onclick="this.select();" value="qalsog816@tumblr.com">
-        			</div>
+					<form action="/tumblrsettings.set" id="tumblr">
+						<label for="PostsPerPage">Posts Per Page</label>
+	        			<div style="margin-bottom: 5px;" class="goody_data">
+	            			<input type="text" value="10" name="PostsPerPage" id="PostsPerPage" />
+	        			</div>
+					</form>
+					-->
             	</div>
-			    <div class="goody_container">
+				<div class="goody_container">
+					<h2>Import Data</h2>
+					<p>Once I've gone outside for a while I'll write a script here that will download a tumblr user's posts here. Not ready yet tho, sorry :(</p>
+					<form action="/import" id="import">
+						<label for="TumblrUser">Tumblr Username</label>
+	        			<div style="margin-bottom: 5px;" class="goody_data">
+	            			<input type="text" value="" name="TumblrUser" id="TumblrUser" />
+	        			</div>
+					</form>
+				</div>
+			    <div style="background-color: rgb(201, 213, 141); border-bottom:1px solid #869445;" class="goody_container">
 			        <h2>Hackity Hack</h2>
 					<p>All Thimblr's settings can be edited on this page, or in the <code>settings.yaml</code> file in the gem source.</p>
-			        <p>Thimblr runs on Ruby, so it should be fairly obvious how it works if you look at the source code. Feel free to <a>fork the project on github</a> and play around. If you make any modifications you're proud off, send me a message! I'll fold useful things into my repo.</p>
+			        <p>Thimblr runs on Ruby, so it should be fairly easy to see how it works if you look at the source code. Feel free to <a href="http://github.com/jphastings/Thimblr/fork" target="github">fork the project on github</a> and play around. If you make any modifications you're proud off, send me a message! I'll fold useful things into my repo.</p>
 			    </div>    
     		</div>
         </div>
