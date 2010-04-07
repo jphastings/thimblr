@@ -61,7 +61,6 @@ class Thimblr::Application < Sinatra::Application
   end
 
   get '/theme.set' do
-    p params
     if File.exists?(File.join(settings.themes,"#{params['theme']}.html"))
       response.set_cookie('theme',params['theme'])
     else
