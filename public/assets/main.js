@@ -11,7 +11,7 @@ $(document).ready(function(){
 
 	$('#theme-select').bind('submit',function(e){
 		$.get('/theme.set',{'theme':$('#theme-selector').children(':selected').val()},function() {
-			$('#theme-preview').attr('src','/thimblr');
+			parent.tumblr.location.href = '/thimblr'
 			$('#theme-selector').children(':selected').removeClass('altered')
 		})
 		return false;
@@ -27,7 +27,7 @@ $(document).ready(function(){
 	$('#data-select').bind('submit',function(e){
 		currtheme = $('#data-selector').children(':selected').val();
 		$.get('/data.set',{'data':currtheme},function() {
-			$('#data-preview').attr('src','/thimblr');
+			parent.tumblr.location.href = '/thimblr'
 			$('#data-selector').children(':selected').removeClass('altered')
 		})
 		return false;

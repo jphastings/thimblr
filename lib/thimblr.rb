@@ -44,6 +44,8 @@ class Thimblr::Application < Sinatra::Base
     s.parse_config(YAML::load(open(File.join(config,'settings.yaml'))))
     enable :sessions
     set :bind, '127.0.0.1'
+    
+    Launchy.open("http://localhost:#{port}")
   end
 
   helpers do
@@ -53,7 +55,11 @@ class Thimblr::Application < Sinatra::Base
   end
 
   get '/' do
-    erb :index
+    redirect 'index.html'
+  end
+
+  get '/menu' do
+    erb :menu
   end
 
   get '/help' do
@@ -179,7 +185,4 @@ class Thimblr::Application < Sinatra::Base
   get '/thimblr/*' do
     @parser.render_page(params[:splat])
   end
-  
-  # TODO: Only if Sinatra runs successfully
-  Launchy.open("http://localhost:#{port}")
 end

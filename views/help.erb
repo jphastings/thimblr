@@ -72,42 +72,6 @@ Hope you guys don't mind… -->
 								</div>
 							</td>
 						</tr>
-						
-						<a name="ThemesLocation"></a>
-						<tr id="opt-ThemesLocation">
-							<td><label for="ThemesLocation">Location of Themes</label></td>
-							<td><input id="ThemesLocation" type="text" name="ThemesLocation" value="<%=get_relative(settings.themes)%>/" /></td>
-							<td class="explain">
-								<div class="contain">
-									<img src="/images/preset.png" class="presetIcon"/>
-									<div class="presetbox">
-										<div class="presets" rel="ThemesLocation">
-										<% Thimblr::Application::Locations.each do |loc| %>
-										<a href="#" rel="<%=loc['dir']%>themes/" title="<%=loc['name']%>" class="preset <%=loc['platform']%>"><img src="/images/os/<%=loc['platform']%>.png"/></a>
-										<% end %>
-										</div>
-									</div>
-								</div>
-							</td>
-						</tr>
-						
-						<a name="DataLocation"></a>
-						<tr id="opt-DataLocation">
-							<td><label for="DataLocation">Location of Data</label></td>
-							<td><input id="DataLocation" type="text" name="DataLocation" value="<%=get_relative(settings.data)%>/" /></td>
-							<td class="explain">
-								<div class="contain">
-									<img src="/images/preset.png" class="presetIcon"/>
-									<div class="presetbox">
-										<div class="presets" rel="DataLocation">
-										<% Thimblr::Application::Locations.each do |loc| %>
-										<a href="#" rel="<%=loc['dir']%>data/" title="<%=loc['name']%>" class="preset <%=loc['platform']%>"><img src="/images/os/<%=loc['platform']%>.png"/></a>
-										<% end %>
-										</div>
-									</div>
-								</div>
-							</td>
-			    		</tr>
 			
 						<a name="Port"></a>
 						<tr id="opt-Port">
