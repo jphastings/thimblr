@@ -5,7 +5,9 @@ require 'digest/md5'
 require 'pathname'
 require 'launchy'
 require 'thimblr/parser'
+require 'thimblr/importer'
 require 'rbconfig'
+require 'fileutils'
 
 class Thimblr::Application < Sinatra::Base
   Editors = {
@@ -13,10 +15,10 @@ class Thimblr::Application < Sinatra::Base
     'bbedit'   => {'command' => "bbedit",'platform' => 'mac','name' => "BBEdit"},
     'textedit' => {'command' => "open -a TextEdit.app",'platform' => 'mac','name' => "TextEdit"}
   }
-  Locations = [
-    {"dir" => "~/Library/Application Support/Thimblr/", 'name' => "Application Support", 'platform' => "mac"},
-    {'dir' => "~/.thimblr/",'name' => "Home directory", 'platform' => "nix"}
-  ]
+  Locations = {
+    "mac" => {"dir" => "~/Library/Application Support/Thimblr/", 'name' => "Application Support", 'platform' => "mac"},
+    "nix" => {'dir' => "~/.thimblr/",'name' => "Home directory", 'platform' => "nix"}
+  }
   
   case RbConfig::CONFIG['target_os']
   when /darwin/i
@@ -28,8 +30,8 @@ class Thimblr::Application < Sinatra::Base
   end
   
   def self.parse_config(s)
-    set :themes, File.expand_path((File.directory? s['ThemesLocation']) ? s['ThemesLocation'] : "./themes")
-    set :data, File.expand_path((File.directory? s['DataLocation'] || "") ? s['DataLocation'] : "")
+    set :themes, File.expand_path(File.join(Locations[Platform]['dir'],"themes"))
+    set :data, File.expand_path(File.join(Locations[Platform]['dir'],"data"))
     set :allowediting, (s['AllowEditing']) ? true : false
     set :editor, s['Editor'] if s['Editor']
     set :tumblr, Thimblr::Parser::Defaults.merge(s['Tumblr'] || {})
@@ -40,8 +42,25 @@ class Thimblr::Application < Sinatra::Base
     set :root, File.join(File.dirname(__FILE__),"..")
     Dir.chdir root
     set :config, File.join(root,'config')
+    set :settingsfile, File.expand_path(File.join(Locations[Platform]['dir'],'settings.yaml'))
     
-    s.parse_config(YAML::load(open(File.join(config,'settings.yaml'))))
+    # Generate Data & Theme directories if required
+    if not File.directory?(File.expand_path(File.join(Locations[Platform]['dir'],"themes")))
+      FileUtils.cp_r(File.join(root,'themes'),File.expand_path(Locations[Platform]['dir']))
+    end
+    
+    if not File.directory?(File.expand_path(File.join(Locations[Platform]['dir'],"data")))
+      FileUtils.mkdir_p(File.expand_path(File.join(Locations[Platform]['dir'],"data")))
+      FileUtils.cp(File.join(config,'demo.yaml'),File.expand_path(File.join(Locations[Platform]['dir'],'data','demo.yml')))
+    end
+    
+    begin # Try to load the settings file, if it's crap then overwrite it with the defaults
+      s.parse_config(YAML::load(open(settingsfile)))
+    rescue
+      FileUtils.cp(File.join(config,'settings.default.yaml'),settingsfile)
+      retry
+    end
+    
     enable :sessions
     set :bind, '127.0.0.1'
     
@@ -83,7 +102,7 @@ class Thimblr::Application < Sinatra::Base
   end
 
   get '/data.set' do
-    if File.exists?(File.join(settings.data,"#{params['data']}.yml")) or params['data'] == 'demo'
+    if File.exists?(File.join(settings.data,"#{params['data']}.yml"))
       response.set_cookie('data',params['data'])
     else
       halt 404, "Not found"
@@ -95,7 +114,6 @@ class Thimblr::Application < Sinatra::Base
     Dir.glob("#{settings.data}/*.yml").collect do |datum|
       data[File.basename(datum,".yml")] = Digest::MD5.hexdigest(open(datum).read)
     end
-    data['demo'] = Digest::MD5.hexdigest(open(File.join(settings.config,"demo.yml")).read)
     data.to_json
   end
 
@@ -124,12 +142,11 @@ class Thimblr::Application < Sinatra::Base
   get %r{/(tumblr)?settings.set} do |tumblr|
     halt 501 if tumblr == "tumblr" # TODO: Tumblr settings save
     
+    params['AllowEditing'] = (params['AllowEditing'] == "on")
     settings.parse_config(params)
-    open(File.join(settings.config,"settings.yaml"),"w") do |f|
+    open(settings.settingsfile,"w") do |f|
       f.write YAML.dump({
         "Tumblr"          => settings.tumblr,
-        "ThemesLocation"  => get_relative(settings.themes),
-        "DataLocation"    => get_relative(settings.data),
         "AllowEditing"    => settings.allowediting,
         "Editor"          => settings.editor,
         "Port"            => settings.port
@@ -139,9 +156,17 @@ class Thimblr::Application < Sinatra::Base
     "Settings saved"
   end
 
-  # TODO: Downloads feed data from a tumblr site
-  get '/import' do
-    halt 501, "Sorry, I haven't written this bit yet!"
+  # Downloads feed data from a tumblr site
+  get %r{/import/([a-zA-Z0-9-]+)} do |username|
+    begin
+      data = Thimblr::Import.username(username)
+      open(File.join(settings.data,"#{username}.yml"),'w') do |f|
+        f.write data
+      end
+    rescue Exception => e
+      halt 404, e.message
+    end
+    "Imported as '#{username}'"
   end
 
   before do

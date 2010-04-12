@@ -2,12 +2,6 @@
 Tumblr:
     PostsPerPage: 10
 
-## Settings affecting Thimblr
-# The location of your theme files
-ThemesLocation: themes
-# The location of your data files
-DataLocation: data
-
 # This allows the thimblr server to open your chosen editor to edit
 # the theme you're currently viewing. There is a (very small!) risk
 # that this could do malicious things, so you can disable it if you

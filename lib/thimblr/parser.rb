@@ -41,9 +41,9 @@ module Thimblr
         'Pagination'         => (@posts.length > @settings['PostsPerPage'].to_i),
         'SubmissionsEnabled' => template['SubmissionsEnabled'],
         'AskEnabled'         => !@constants['AskLabel'].empty?,
-        'HasPages'           => @pages.length > 0,
-        'Following'          => @following.length > 0,
-        'Followed'           => @followed.length > 0,
+        'HasPages'           => (@pages.length > 0 rescue false),
+        'Following'          => (@following.length > 0 rescue false),
+        'Followed'           => (@followed.length > 0 rescue false),
         'More'               => true
       }
     

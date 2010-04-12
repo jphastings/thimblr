@@ -83,7 +83,7 @@ Hope you guys don't mind… -->
 			    		</tr>
 					</table>
 					</form>
-					<p><em>Changes are saved automatically</em></p>
+					<p id="saved"><em>Changes are saved automatically</em></p>
 				</div>
 			</div>
 			<div style="background-color: rgb(192, 205, 129);" id="right_column">
@@ -94,10 +94,10 @@ Hope you guys don't mind… -->
             	</div>
 				<div class="goody_container">
 					<h2>Import Data</h2>
-					<p>Once I've gone outside for a while I'll write a script here that will download a tumblr user's posts here. Not ready yet tho, sorry :(</p>
-					<form action="/import" id="import">
+					<p>Imports posts data from a specific tumblelog, so you can test themes with real-world data!</p>
+					<form action="/import/" id="import">
 						<label for="TumblrUser">Tumblr Username</label>
-	        			<div style="margin-bottom: 5px;" class="goody_data">
+	        			<div style="margin-bottom: 5px;" class="goody_data" id="importinput">
 	            			<input type="text" value="" name="TumblrUser" id="TumblrUser" />
 	        			</div>
 					</form>

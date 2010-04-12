@@ -34,7 +34,6 @@ $(document).ready(function(){
 	});
 
 	$('#data-selector').bind('click',function(e){
-		alert('argh')
 		if (e.target.nodeName.toLowerCase() === 'option')
 	  		$('#data-select').trigger('submit');
 	});
