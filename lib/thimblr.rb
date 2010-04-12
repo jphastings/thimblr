@@ -51,7 +51,7 @@ class Thimblr::Application < Sinatra::Base
     
     if not File.directory?(File.expand_path(File.join(Locations[Platform]['dir'],"data")))
       FileUtils.mkdir_p(File.expand_path(File.join(Locations[Platform]['dir'],"data")))
-      FileUtils.cp(File.join(config,'demo.yaml'),File.expand_path(File.join(Locations[Platform]['dir'],'data','demo.yml')))
+      FileUtils.cp(File.join(config,'demo.yml'),File.expand_path(File.join(Locations[Platform]['dir'],'data','demo.yml')))
     end
     
     begin # Try to load the settings file, if it's crap then overwrite it with the defaults
