@@ -63,7 +63,12 @@ class Thimblr::Application < Sinatra::Base
     enable :sessions
     set :bind, '127.0.0.1'
     
-    Launchy.open("http://localhost:#{port}")
+    # Dirty hack cos Windows support in Launchy appears to be broken
+    if Platform == 'win'
+      `start http://localhost:#{port}`
+    else
+      Launchy.open("http://localhost:#{port}")
+    end
   end
 
   helpers do
