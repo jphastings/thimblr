@@ -17,7 +17,8 @@ class Thimblr::Application < Sinatra::Base
   }
   Locations = {
     "mac" => {"dir" => "~/Library/Application Support/Thimblr/", 'name' => "Application Support", 'platform' => "mac"},
-    "nix" => {'dir' => "~/.thimblr/",'name' => "Home directory", 'platform' => "nix"}
+    "nix" => {'dir' => "~/.thimblr/",'name' => "Home directory", 'platform' => "nix"},
+    "win" => {'dir' => "~/AppData/Roaming/Thimblr/",'name' => "AppData", 'platform' => "nix"} # TODO: This value is hardcoded for vista/7, I should probably superceed expand_path and parse for different versions of Windows here
   }
   
   case RbConfig::CONFIG['target_os']
