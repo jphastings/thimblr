@@ -18,13 +18,13 @@ class Thimblr::Application < Sinatra::Base
   Locations = {
     "mac" => {"dir" => "~/Library/Application Support/Thimblr/", 'name' => "Application Support", 'platform' => "mac"},
     "nix" => {'dir' => "~/.thimblr/",'name' => "Home directory", 'platform' => "nix"},
-    "win" => {'dir' => "~/AppData/Roaming/Thimblr/",'name' => "AppData", 'platform' => "nix"} # TODO: This value is hardcoded for vista/7, I should probably superceed expand_path and parse for different versions of Windows here
+    "win" => {'dir' => "~/AppData/Roaming/Thimblr/",'name' => "AppData", 'platform' => "win"} # TODO: This value is hardcoded for vista/7, I should probably superceed expand_path and parse for different versions of Windows here
   }
   
   case RbConfig::CONFIG['target_os']
   when /darwin/i
     Platform = "mac"
-  when /mswin32/i
+  when /mswin32/i,/mingw32/i
     Platform = "win"
   else
     Platform = "nix"
@@ -46,9 +46,7 @@ class Thimblr::Application < Sinatra::Base
     set :settingsfile, File.expand_path(File.join(Locations[Platform]['dir'],'settings.yaml'))
     
     # Generate Data & Theme directories if required
-    if not File.directory?(File.expand_path(File.join(Locations[Platform]['dir'],"themes")))
-      FileUtils.cp_r(File.join(root,'themes'),File.expand_path(Locations[Platform]['dir']))
-    end
+      FileUtils.cp_r(File.join(root,'themes'),File.expand_path(Locations[Platform]['dir'])) if not File.directory?(File.expand_path(File.join(Locations[Platform]['dir'],"themes")))
     
     if not File.directory?(File.expand_path(File.join(Locations[Platform]['dir'],"data")))
       FileUtils.mkdir_p(File.expand_path(File.join(Locations[Platform]['dir'],"data")))
