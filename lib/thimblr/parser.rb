@@ -197,7 +197,7 @@ module Thimblr
                 
                   post['Permalink'] = "http://127.0.0.1:4567/thimblr/post/#{post['PostId']}/" # TODO: Port number
                   post['ShortURL'] = post['Permalink'] # No need for a real short URL
-                  post['TagsAsClasses'] = (constants['Tags'] || []).collect{ |tag| tag.gsub(/[^a-z]/i,"_").downcase }.join(" ")
+                  post['TagsAsClasses'] = (post['Tags'] || []).collect{ |tag| tag.gsub(/[^a-z]/i,"_").downcase }.join(" ")
                   post['}numberonpage'] = n + 1 # use a } at the begining so the theme can't access it
                 
                   # Group Posts

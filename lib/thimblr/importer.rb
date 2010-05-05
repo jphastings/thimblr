@@ -36,6 +36,8 @@ module Thimblr
         post.store('LinkURL',xpost.search("#{xpost['type']}-link-url")[0].content) rescue nil
 
         post.store('Source',xpost.search("#{xpost['type']}-source")[0].content) rescue nil
+        
+        post.store('Description',xpost.search("#{xpost['type']}-description")[0].content) rescue nil
     
         case post['Type']
         when "Photo"
