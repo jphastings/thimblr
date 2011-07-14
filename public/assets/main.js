@@ -33,7 +33,7 @@ $(document).ready(function(){
 		return false;
 	});
 
-	$('#data-selector').bind('click',function(e){
+	$('#data-selector').bind('change',function(e){
 		if (e.target.nodeName.toLowerCase() === 'option')
 	  		$('#data-select').trigger('submit');
 	});
