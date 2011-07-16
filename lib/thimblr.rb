@@ -175,7 +175,7 @@ class Thimblr::Application < Sinatra::Base
 
   before do
     request.cookies['data'] ||= "demo"
-    if request.env['REQUEST_PATH'] =~ /^\/thimblr/
+    if request.env['PATH_INFO'] =~ /^\/thimblr/
       if File.exists?(File.join(settings.themes,"#{request.cookies['theme']}.html"))
         data = File.exists?(File.join(settings.data,"#{request.cookies['data']}.yml")) ? "#{settings.data}/#{request.cookies['data']}.yml" : File.join(settings.config,"demo.yml")
         @parser = Thimblr::Parser.new(data,"#{settings.themes}/#{request.cookies['theme']}.html",settings.tumblr)
