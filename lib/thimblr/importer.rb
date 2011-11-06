@@ -12,10 +12,10 @@ module Thimblr
       rescue OpenURI::HTTPError
         raise "Username not found"
       end
-  
+
       data['Title'] = xml.search('tumblelog')[0]['title']
       data['Description'] = xml.search('tumblelog')[0].content
-  
+
       data['Posts'] = []
       xml.search('posts post').each do |xpost|
         post = {
@@ -25,18 +25,21 @@ module Thimblr
           'Timestamp' => xpost['unix-timestamp'].to_i,
           'Tags' => xpost.search('tag').collect{ |tag| tag.content }
         }
-    
+
         post['Type'] = "Text" if post['Type'] == "Regular"
         post['Type'] = "Chat" if post['Type'] == "Conversation"
-    
+
         post.store('Title', xpost.search("#{xpost['type']}-title")[0].content) rescue nil
-    
+
         post.store('Caption',xpost.search("#{xpost['type']}-caption")[0].content) rescue nil
-    
+
         post.store('LinkURL',xpost.search("#{xpost['type']}-link-url")[0].content) rescue nil
 
         post.store('Source',xpost.search("#{xpost['type']}-source")[0].content) rescue nil
-    
+
+        post.store('Description',xpost.search("#{xpost['type']}-description")[0].content) rescue nil
+
+
         case post['Type']
         when "Photo"
           xpost.search('photo-url').each do |photo|
@@ -47,20 +50,23 @@ module Thimblr
             post['Name'] = xpost.search("link-text")[0].content
           rescue
           end
+        when "Quote"
+          puts xpost.search("quote-text").inspect
+          post['Quote'] = xpost.search("quote-text")[0].content
         when "Video"
           post['Player'] = xpost.search("video-player")[0].content
         when "Text"
           post['Body'] = xpost.search("regular-body")[0].content
         end
-    
+
         data['Posts'].push post
       end
-      
+
       # Pages
       begin
         xml = Nokogiri::XML(open("http://#{username}.tumblr.com/api/pages"))
         data['Pages'] = []
-        
+
         xml.search('pages').children.each do |re|
           case re.name
           when "redirect"
@@ -82,7 +88,7 @@ module Thimblr
       rescue OpenURI::HTTPError
         # No pages
       end
-      
+
       YAML::dump(data)
     end
   end
